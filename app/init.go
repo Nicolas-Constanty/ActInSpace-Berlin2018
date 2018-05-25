@@ -4,7 +4,6 @@ import (
 	"github.com/revel/revel"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/Nicolas-Constanty/sentimentAnalysisWebApp/app/models"
 )
 
 var (
@@ -26,8 +25,7 @@ func InitDB() {
 	//db.DropTable(&models.TimeValue{})
 
 	// Migrate the schema
-	db.AutoMigrate(&models.TimeValue{})
-	db.AutoMigrate(&models.Topic{})
+	// Migrate the schema
 }
 
 
