@@ -15,7 +15,9 @@ import (
 type App struct {
 	*revel.Controller
 }
-
+func (c App) Maps() revel.Result{
+	return c.Render()
+}
 func readLine(path string) []string {
 	var dir, err = filepath.Abs(filepath.Dir(os.Args[0]))
 	if (err != nil) {
@@ -56,4 +58,5 @@ func (c App) InitialValue() revel.Result {
 
 func (c App) Index() revel.Result {
 	return c.Render()
+
 }

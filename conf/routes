@@ -8,6 +8,7 @@ module:testrunner
 
 
 GET     /                                       App.Index
+GET     /map                                    App.Maps
 GET     /initial_value                          App.InitialValue
 GET     /sourcedatas                            Static.Serve("public","resources/datas2d")
 
