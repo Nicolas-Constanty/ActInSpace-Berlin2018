@@ -1,0 +1,13 @@
+#map {
+ height: 400px;
+ width: 100%;
+ margin: auto;
+ background: red;
+}
+#map-container {
+  text-align: center;
+  border: 3px solid green;
+  width: 50%;
+  position: relative;
+  margin: auto;
+}
