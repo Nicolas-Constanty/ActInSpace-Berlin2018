@@ -33,16 +33,23 @@ function getRandomArbitrary(min, max) {
 }
 
 function updatepos(map) {
+    // if mouse is down, stop all updates
+    if ( chart.mouseDown )
+        return;
+
     let random  = getRandomArbitrary(-0.00001, 0.00001);
     let i = 0;
+    maindate.setDate(maindate.getDate() + 1);
     while(i < buildingDatas.length){
         let random2  = getRandomArbitrary(-0.1, 0.1);
         if (buildingDatas[i]["Deformation"] + random2 > 0.08 ||buildingDatas[i]["Deformation"] + random2 < -0.08) {
           markers[i].setIcon(icons.redpin.icon)
         }
+        chart.dataSets[i].dataProvider.push({"value": buildingDatas[i]["Deformation"] + random2, "date": maindate});
         markers[i].setPosition(new google.maps.LatLng({lat:buildingDatas[i]["Position"]["Lat"] + random, lng: buildingDatas[i]["Position"]["Lng"] + random}));
         i++;
     }
+    chart.validateData();
 }
 
 function initMapi() {
@@ -54,10 +61,6 @@ function initMapi() {
         mapTypeId: 'satellite'
     });
     return map;
-}
-
-function updateGrap() {
-
 }
 
 function initMarker(map)
@@ -75,39 +78,8 @@ function initMarker(map)
 function initgmap() {
     let gmap = initMapi();
     initMarker(gmap);
-    setInterval(function (map) { updatepos(map) }, 3000);
     generateChartData();
-    /**
-     * Set up interval to update the data periodically
-     */
-    setInterval( function() {
-
-        // if mouse is down, stop all updates
-        if ( chart.mouseDown )
-            return;
-
-        // normally you would load new datapoints here,
-        // but we will just generate some random values
-        // and remove the value from the beginning so that
-        // we get nice sliding graph feeling
-
-        // remove datapoint from the beginning
-        // chartData1.shift();
-        //chartData2.shift();
-        //chartData3.shift();
-        // chartData4.shift();
-
-        // add new datapoint at the end
-        maindate.setDate(maindate.getDate() + 1);
-
-        let i = 0;
-        while(i < buildingDatas.length){
-            chart.dataSets[i].dataProvider.push({"value": buildingDatas[i]["Deformation"], "date": maindate});
-            i = i+1;
-        }
-
-        chart.validateData();
-    }, 1000 );
+    setInterval(function (map) { updatepos(map) }, 3000);
 }
 
 /**
@@ -126,7 +98,6 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "panels": [ {
         "showCategoryAxis": true,
         "title": "Value",
-        "percentHeight": 60,
         "stockGraphs": [ {
             "id": "g1",
             "valueField": "value",
@@ -135,6 +106,11 @@ var chart = AmCharts.makeChart( "chartdiv", {
         } ],
         "stockLegend": {}
     } ],
+    "valueAxesSettings" : {
+        "minimum": 0,
+        "maximum": 1,
+        "gridCount": 10
+    },
 
     // Scrollbar settings
     "chartScrollbarSettings": {
