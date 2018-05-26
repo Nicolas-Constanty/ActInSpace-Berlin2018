@@ -37,7 +37,7 @@ func readLine(path string) []string {
 
 func (c App) InitialValue() revel.Result {
 	data := models.Building{}
-	data.Name = "ActinSpace Building"
+	data.Name = "Building"
 	lines := readLine("resources/datas2d")
 	for _, line := range lines {
 		s := strings.Split(line, " ")

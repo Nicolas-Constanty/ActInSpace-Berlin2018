@@ -164,6 +164,9 @@ var chart = AmCharts.makeChart( "chartdiv", {
 } );
 
 var maindate = new Date();
+maindate.setDate( maindate.getDate() - 500 );
+maindate.setHours( 0, 0, 0, 0 );
+
 function generateChartData() {
     let i = 0;
     while(i < buildingDatas.length){
