@@ -157,9 +157,9 @@ var chart = AmCharts.makeChart( "chartdiv", {
 
 var maindate = new Date();
 function generateChartData() {
-    let chartdatasets = [];
     let i = 0;
     while(i < buildingDatas.length){
+        let chartdatasets = [];
         chartdatasets.push({value: buildingDatas[i]["Deformation"], date: maindate});
         let dataset = new AmCharts.DataSet();
         dataset.title = building["Name"] + " - Point n°" + i;
@@ -171,6 +171,10 @@ function generateChartData() {
     chart.validateData();
 }
 
+
+
+getData();
+generateChartData();
 /**
  * Set up interval to update the data periodically
  */
@@ -202,6 +206,3 @@ setInterval( function() {
 
     chart.validateData();
 }, 1000 );
-
-getData();
-generateChartData();
