@@ -164,6 +164,16 @@ function generateChartData() {
         let dataset = new AmCharts.DataSet();
         dataset.title = building["Name"] + " - Point n°" + i;
         dataset.dataProvider = chartdatasets;
+        dataset.categoryField = "date";
+        for ( i1 in chart.panels ) {
+            for ( i2 in chart.panels[ i1 ].stockGraphs ) {
+                var valueField = chart.panels[ i1 ].stockGraphs[ i2 ].valueField;
+                dataset.fieldMappings.push( {
+                    "fromField": valueField,
+                    "toField": valueField
+                } );
+            }
+        }
         chart.dataSets.push(dataset);
         i = i+1;
     }
