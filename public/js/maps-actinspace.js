@@ -24,9 +24,15 @@ function getRandomArbitrary(min, max) {
 
 function updatepos(map) {
     let random  = getRandomArbitrary(-0.00001, 0.00001);
-    console.log(buildingDatas[0]["Position"]["Lat"] + random);
+
     let i = 0;
+    console.log(buildingDatas[0]["Position"]["Lat"] + random);
     while(i < buildingDatas.length){
+        let random2  = getRandomArbitrary(-0.1, 0.1);
+
+        if (buildingDatas[i]["Deformation"] + random2 > 0.05 ||buildingDatas[i]["Deformation"] + random2 < 0.05) {
+          markers[i].setIcon(new )
+        }
         markers[i].setPosition(new google.maps.LatLng({lat:buildingDatas[i]["Position"]["Lat"] + random, lng: buildingDatas[i]["Position"]["Lng"] + random}));
         i++;
     }
@@ -49,7 +55,7 @@ function initMarker(map)
     console.log(buildingDatas[0]["Position"]["Lat"]);
     while(i < buildingDatas.length){
         var latlng = new google.maps.LatLng({lat: buildingDatas[i]["Position"]["Lat"], lng: buildingDatas[i]["Position"]["Lng"]});
-        var marker = new google.maps.Marker({ position: latlng });
+        var marker = new google.maps.Marker({ position: latlng, icon: iconBase + 'parking_lot_maps.png' });
         marker.setMap(map);
         markers.push(marker);
         i++;
