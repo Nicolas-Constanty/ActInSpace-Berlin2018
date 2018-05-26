@@ -35,7 +35,6 @@ function getRandomArbitrary(min, max) {
 function updatepos(map) {
     let random  = getRandomArbitrary(-0.00001, 0.00001);
     let i = 0;
-    console.log(buildingDatas[0]["Position"]["Lat"] + random);
     while(i < buildingDatas.length){
         let random2  = getRandomArbitrary(-0.1, 0.1);
         if (buildingDatas[i]["Deformation"] + random2 > 0.08 ||buildingDatas[i]["Deformation"] + random2 < -0.08) {
@@ -77,6 +76,38 @@ function initgmap() {
     let gmap = initMapi();
     initMarker(gmap);
     setInterval(function (map) { updatepos(map) }, 3000);
+    generateChartData();
+    /**
+     * Set up interval to update the data periodically
+     */
+    setInterval( function() {
+
+        // if mouse is down, stop all updates
+        if ( chart.mouseDown )
+            return;
+
+        // normally you would load new datapoints here,
+        // but we will just generate some random values
+        // and remove the value from the beginning so that
+        // we get nice sliding graph feeling
+
+        // remove datapoint from the beginning
+        // chartData1.shift();
+        //chartData2.shift();
+        //chartData3.shift();
+        // chartData4.shift();
+
+        // add new datapoint at the end
+        maindate.setDate(maindate.getDate() + 1);
+
+        let i = 0;
+        while(i < buildingDatas.length){
+            chart.dataSets[i].dataProvider.push({"value": buildingDatas[i]["Deformation"], "date": maindate});
+            i = i+1;
+        }
+
+        chart.validateData();
+    }, 1000 );
 }
 
 /**
@@ -91,8 +122,9 @@ var chart = AmCharts.makeChart( "chartdiv", {
 
     // Defining data sets
     // Panels
+    "dataSets": [],
     "panels": [ {
-        "showCategoryAxis": false,
+        "showCategoryAxis": true,
         "title": "Value",
         "percentHeight": 60,
         "stockGraphs": [ {
@@ -160,7 +192,7 @@ function generateChartData() {
     let i = 0;
     while(i < buildingDatas.length){
         let chartdatasets = [];
-        chartdatasets.push({value: buildingDatas[i]["Deformation"], date: maindate});
+        chartdatasets.push({"value": buildingDatas[i]["Deformation"], "date": maindate});
         let dataset = new AmCharts.DataSet();
         dataset.title = building["Name"] + " - Point n°" + i;
         dataset.dataProvider = chartdatasets;
@@ -184,35 +216,3 @@ function generateChartData() {
 
 
 getData();
-generateChartData();
-/**
- * Set up interval to update the data periodically
- */
-setInterval( function() {
-
-    // if mouse is down, stop all updates
-    if ( chart.mouseDown )
-        return;
-
-    // normally you would load new datapoints here,
-    // but we will just generate some random values
-    // and remove the value from the beginning so that
-    // we get nice sliding graph feeling
-
-    // remove datapoint from the beginning
-    // chartData1.shift();
-    //chartData2.shift();
-    //chartData3.shift();
-    // chartData4.shift();
-
-    // add new datapoint at the end
-    maindate.setDate(maindate.getDate() + 1);
-
-    let i = 0;
-    while(i < buildingDatas.length){
-        chart.dataSets[i].dataProvider({value: buildingDatas[i]["Deformation"], date: maindate});
-        i = i+1;
-    }
-
-    chart.validateData();
-}, 1000 );
