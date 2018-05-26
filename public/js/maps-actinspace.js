@@ -1,5 +1,6 @@
 
-
+let buildingDatas = [];
+let markers = [];
 function getData() {
     const req = new XMLHttpRequest();
 
@@ -7,8 +8,8 @@ function getData() {
         // XMLHttpRequest.DONE === 4
         if (this.readyState === XMLHttpRequest.DONE) {
             if (this.status === 200) {
-                var json = JSON.parse(this.responseText);
-                initMap(json)
+                buildingDatas = JSON.parse(this.responseText)["Values"];
+                initgmap();
             } else {
                 console.log("Status de la réponse: %d (%s)", this.status, this.statusText);
             }
@@ -17,29 +18,48 @@ function getData() {
     req.open('GET', 'http://localhost:9000/initial_value', true);
     req.send(null);
 }
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
-function initMap(jsonValue) {
-  var uluru = {lat: 52.5154472, lng: 13.323786};
-  var markerTabs = [];
-
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 17,
-      center: uluru,
-      disableDefaultUI: true,
-      mapTypeId: 'satellite'
-    });
-
-    var i = 0;
-    while(i < jsonValue["Values"].length){
-        var pos = {lng: jsonValue["Values"][i]["Position"]["Lng"], lat: jsonValue["Values"][i]["Position"]["Lat"]};
-         markerTabs.push(new google.maps.Marker({
-             position: pos,
-             map: map
-         }));
+function updatepos(map) {
+    let random  = getRandomArbitrary(-0.00001, 0.00001);
+    console.log(buildingDatas[0]["Position"]["Lat"] + random);
+    let i = 0;
+    while(i < buildingDatas.length){
+        markers[i].setPosition(new google.maps.LatLng({lat:buildingDatas[i]["Position"]["Lat"] + random, lng: buildingDatas[i]["Position"]["Lng"] + random}));
         i++;
     }
-    i = 0;
+}
 
+function initMapi() {
+    let origin = new google.maps.LatLng(52.5154472, 13.323786);
+    let map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 17,
+        center: origin,
+        disableDefaultUI: true,
+        mapTypeId: 'satellite'
+    });
+    return map;
+}
 
-};
+function initMarker(map)
+{
+    let i = 0;
+    console.log(buildingDatas[0]["Position"]["Lat"]);
+    while(i < buildingDatas.length){
+        var latlng = new google.maps.LatLng({lat: buildingDatas[i]["Position"]["Lat"], lng: buildingDatas[i]["Position"]["Lng"]});
+        var marker = new google.maps.Marker({ position: latlng });
+        marker.setMap(map);
+        markers.push(marker);
+        i++;
+    }
+}
+
+function initgmap() {
+    let gmap = initMapi();
+    initMarker(gmap);
+    setInterval(function (map) { updatepos(map) }, 3000);
+}
+
+getData();
