@@ -1,3 +1,12 @@
+var iconBase = 'http://localhost:9000/public/img/';
+var icons = {
+    redpin: {
+        icon: iconBase + 'redpin.png'
+    },
+    greenpin: {
+        icon: iconBase + 'greenpin.png'
+    }
+};
 
 let buildingDatas = [];
 let markers = [];
@@ -24,7 +33,6 @@ function getRandomArbitrary(min, max) {
 
 function updatepos(map) {
     let random  = getRandomArbitrary(-0.00001, 0.00001);
-    console.log(buildingDatas[0]["Position"]["Lat"] + random);
     let i = 0;
     while(i < buildingDatas.length){
         markers[i].setPosition(new google.maps.LatLng({lat:buildingDatas[i]["Position"]["Lat"] + random, lng: buildingDatas[i]["Position"]["Lng"] + random}));
@@ -46,10 +54,9 @@ function initMapi() {
 function initMarker(map)
 {
     let i = 0;
-    console.log(buildingDatas[0]["Position"]["Lat"]);
     while(i < buildingDatas.length){
-        var latlng = new google.maps.LatLng({lat: buildingDatas[i]["Position"]["Lat"], lng: buildingDatas[i]["Position"]["Lng"]});
-        var marker = new google.maps.Marker({ position: latlng });
+        let latlng = new google.maps.LatLng({lat: buildingDatas[i]["Position"]["Lat"], lng: buildingDatas[i]["Position"]["Lng"]});
+        let marker = new google.maps.Marker({ position: latlng, icon: icons.greenpin.icon });
         marker.setMap(map);
         markers.push(marker);
         i++;
